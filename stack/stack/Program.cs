@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 public class Stack
 {
     public ArrayList liste;
-    private int p_index;
+    public int p_index;
     private int kapasite;
 
     public Stack(int kapasite)
@@ -27,13 +28,20 @@ public class Stack
         if (IsEmpty())
         {
             Console.WriteLine("Yığın Boş! Eleman çıkarılamaz.");
-            throw new InvalidOperationException("Yığın boş.");
+            return true;
+
+        }
+        else
+        { 
+            object ?obj = liste[p_index];
+            liste.RemoveAt(p_index);
+            p_index--;
+            return obj;
+
+
         }
 
-        object obj = liste[p_index];
-        liste.RemoveAt(p_index);
-        p_index--;
-        return obj;
+
 
     }
 
@@ -52,13 +60,20 @@ public class Stack
 
     public bool IsEmpty()
     {
-        return p_index == -1;
+        if(p_index == -1)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public bool IsFull()
     {
 
-        return kapasite == p_index - 1;
+        return p_index == kapasite - 1;
 
 
     }
@@ -90,12 +105,65 @@ public class Stack
                 Console.Write(i + " ");
             }
             Console.WriteLine("  ]\n");
-        }
+        } 
     }
+
+
+}
+
+public class PalindromeChecker
+{
+    public void IsPalindrome(string kelime)
+    {
+        Stack st1 = new Stack(kelime.Length);
+        Stack st2 = new Stack(kelime.Length);
+
+        for (int i = 0; i < kelime.Length; i++)
+        {
+            st1.Push(kelime.Substring(i, 1));
+        }
+        for (int j = kelime.Length - 1; j >= 0; j--)
+        {
+            st2.Push(kelime.Substring(j, 1));
+
+        }
+        bool palindrom = true;
+
+        while (!st1.IsEmpty() && !st2.IsEmpty())
+        {
+            object cikan1;
+            object cikan2;
+            cikan1 = st1.Pop();
+            cikan2 = st2.Pop();
+
+            if (cikan1.ToString().ToLower() != cikan2.ToString().ToLower())
+            {
+                palindrom = false;
+                break;
+
+            }
+
+        }
+
+        if (palindrom)
+        {
+            Console.WriteLine("Kelime Palindromdur");
+        }
+        else
+        {
+            Console.WriteLine("Kelime Palindrom Değildir");
+        }
+
+    }
+}
+
+
+
 
     public class Program
     {
-        public static void Main()
+
+    public static void Main()
         {
             string deger;
 
@@ -119,7 +187,20 @@ public class Stack
             Console.WriteLine($"Yığın Dolu Mu :{deger}");
             st.Display();
 
+            Console.Write("Palindrom Kelime Kontrolü İçin Kelime Giriniz : ");
+
+
+
+            PalindromeChecker  kelime = new PalindromeChecker();
+            string checkval = kelime.ToString();
+            checkval = Console.ReadLine();
+          
+            kelime.IsPalindrome(checkval);
+
             Console.ReadLine();
+       
         }
     }
-}
+
+
+
